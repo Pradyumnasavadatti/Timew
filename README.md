@@ -1,4 +1,4 @@
-Hi
+Hello
 
 This is website serves as basic stop watch.
 
