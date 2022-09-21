@@ -29,7 +29,7 @@ export default function Time() {
       setHrs(h);
       setMin(m);
       setSec(i);
-    }, 10);
+    }, 1000);
   }
   function stop() {
     clearInterval(interval);
