@@ -1,51 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./Time.css";
 let interval,
   i = 0,
   m = 0,
   h = 0;
 export default function Time() {
-  const [sec, setSec] = useState(0);
-  const [min, setMin] = useState(0);
-  const [hrs, setHrs] = useState(0);
+  const secRef = useRef();
+  const minRef = useRef();
+  const hrsRef = useRef();
   const [btn, setBtn] = useState(true);
   const [btnr, setBtnr] = useState(false);
 
+  useEffect(() => {
+    if (btn == false) {
+      interval = setInterval(() => {
+        if (i == 59) {
+          i = 0;
+          if (m == 59) {
+            m = 0;
+            h = h + 1;
+          } else {
+            m = m + 1;
+          }
+        } else {
+          i = i + 1;
+        }
+        hrsRef.current.innerHTML = h;
+        minRef.current.innerHTML = m;
+        secRef.current.innerHTML = i;
+        document.title = `(${h}:${m}:${i})  Timer App`;
+      }, 1000);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [btn]);
   function start() {
     setBtn(false);
     setBtnr(true);
-    interval = setInterval(() => {
-      if (i === 59) {
-        i = 0;
-        if (m === 59) {
-          m = 0;
-          h = h + 1;
-        } else {
-          m = m + 1;
-        }
-      } else {
-        i = i + 1;
-      }
-      setHrs(h);
-      setMin(m);
-      setSec(i);
-    }, 1000);
   }
   function stop() {
-    clearInterval(interval);
-    setHrs(h);
-    setMin(m);
-    setSec(i);
     setBtn(true);
   }
   function reset() {
     setBtnr(false);
-    setHrs(0);
-    setMin(0);
-    setSec(0);
     h = 0;
     m = 0;
     i = 0;
+    hrsRef.current.innerHTML = h;
+    minRef.current.innerHTML = m;
+    secRef.current.innerHTML = i;
   }
   return (
     <div className="main">
@@ -53,11 +57,17 @@ export default function Time() {
         <div className="main1">Timer</div>
         <div className="main2">
           <div className="main22">
-            <div className="time">{hrs}</div>
+            <div className="time" ref={hrsRef}>
+              0
+            </div>
             <div className="colon">:</div>
-            <div className="time">{min}</div>
+            <div className="time" ref={minRef}>
+              0
+            </div>
             <div className="colon">:</div>
-            <div className="time">{sec}</div>
+            <div className="time" ref={secRef}>
+              0
+            </div>
           </div>
         </div>
         <div className="main3">
